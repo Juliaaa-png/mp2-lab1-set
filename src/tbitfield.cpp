@@ -32,8 +32,9 @@ TBitField::TBitField(const TBitField &bf) // конструктор копиро
 
 TBitField::~TBitField()
 {
+	BitLen = 0;
+	MemLen = 0;
 	delete[] pMem;
-	pMem = NULL;
 }
 
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
@@ -57,6 +58,10 @@ int TBitField::GetLength(void) const // получить длину (к-во б�
 
 void TBitField::SetBit(const int n) // установить бит
 {
+	if ((n < 0) || (n >= (*this).BitLen))
+	{
+		throw "Invalid position";
+	}
 	int i = GetMemIndex(n);
 	TELEM m = GetMemMask(n);
 	pMem[i] = pMem[i] | m;
@@ -65,6 +70,10 @@ void TBitField::SetBit(const int n) // установить бит
 
 void TBitField::ClrBit(const int n) // очистить бит
 {
+	if ((n < 0) || (n >= BitLen))
+	{
+		throw "Invalid position";
+	}
 	int i = GetMemIndex(n);
 	TELEM m = GetMemMask(n);
 	pMem[i] = pMem[i] & (~m);
@@ -72,9 +81,13 @@ void TBitField::ClrBit(const int n) // очистить бит
 
 int TBitField::GetBit(const int n) const // получить значение бита
 {
+	if ((n < 0) || (n >= BitLen))
+	{
+		throw "Invalid position";
+	}
 	int i = GetMemIndex(n);
 	TELEM m = GetMemMask(n);
-	pMem[i] = pMem[i] & m;
+	return pMem[i] & m;
 }
 
 // битовые операции
